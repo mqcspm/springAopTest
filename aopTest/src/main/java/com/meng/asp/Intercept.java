@@ -19,6 +19,8 @@ public class Intercept {
 
     @AfterReturning(value = "point()", returning = "result")
     public void doAfter(Object result) throws Throwable {
+        Person person = (Person) result;
+        person.setName("二狗子");
         System.out.println("****** AfterReturning" + result.toString());
     }
 }
