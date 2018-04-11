@@ -14,6 +14,21 @@ public class LoginService {
     @Autowired
     GetPersonService getPersonService;
 
+    /**
+     * 环绕通知类型
+     * @param person
+     */
+    public void printPerson(Person person){
+        person.setAge(2);
+        person.setName("a");
+        Person p = getPersonService.getPerson(person);
+        System.out.println(p.toString());
+    }
+
+
+    /**
+     * 前置通知后置通知
+     */
     public void printPerson(){
         Person person = getPersonService.getPerson();
         System.out.println(person.toString());

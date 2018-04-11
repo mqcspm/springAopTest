@@ -1,5 +1,6 @@
 package com.meng;
 
+import com.meng.commons.Person;
 import com.meng.service.LoginService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,5 +22,12 @@ public class AopTest {
     public void testAOP() {
         loginService.printPerson();
     }
+
+    @Test
+    public void testAroundAOP() {
+        Person person = new Person();
+        loginService.printPerson();
+    }
+
 
 }

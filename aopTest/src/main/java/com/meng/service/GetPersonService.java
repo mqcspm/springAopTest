@@ -13,6 +13,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GetPersonService {
+
+    @Say
+    public Person getPerson(Person person){
+        System.out.println("*******" + person.toString());
+        return person;
+    }
+
     @Say
     public Person getPerson(){
         Person person = new Person();
