@@ -20,14 +20,20 @@ public class AopTest {
 
     @Test
     public void testAOP() {
-        loginService.printPerson();
+        loginService.interceptionReturn();
     }
 
     @Test
-    public void testAroundAOP() {
+    public void testAroundAOPParam() {
         Person person = new Person();
-        loginService.printPerson();
+        person.setAge(2);
+        person.setName("a");
+        loginService.interceptionParam(person);
     }
 
+    @Test
+    public void testAroundAOPReturn() {
+        loginService.interceptionReturn();
+    }
 
 }

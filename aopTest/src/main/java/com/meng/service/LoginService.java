@@ -15,21 +15,19 @@ public class LoginService {
     GetPersonService getPersonService;
 
     /**
-     * 环绕通知类型
+     * 环绕通知类型（拦截参数）
      * @param person
      */
-    public void printPerson(Person person){
-        person.setAge(2);
-        person.setName("a");
+    public void interceptionParam(Person person){
         Person p = getPersonService.getPerson(person);
         System.out.println(p.toString());
     }
 
 
     /**
-     * 前置通知后置通知
+     * 前置通知后置通知(拦截放回值)
      */
-    public void printPerson(){
+    public void interceptionReturn(){
         Person person = getPersonService.getPerson();
         System.out.println(person.toString());
     }
@@ -41,7 +39,7 @@ public class LoginService {
      * 由于 this 关键字引用的并不是该 Service Bean 对象的代理对象，而是其本身，故 Spring AOP 是不能拦截到这些被嵌套调用的方法的。
      * @return
      */
-    @Say
+    @Say(paramClassName = Void.class,returnClassName = Person.class)
     public Person getPerson(){
         Person person = new Person();
         person.setAge(1);

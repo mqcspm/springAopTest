@@ -1,14 +1,20 @@
 package com.meng.asp;
 
 
+import com.meng.anno.Say;
 import com.meng.commons.Person;
+import com.sun.deploy.util.ArrayUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by mengqingcai on 2018/3/26.
@@ -18,10 +24,10 @@ import java.lang.reflect.Method;
 public class Intercept {
 
     /**
-     * 设置切入点
+     * 设置切入点，在切入点方法中传入自定义的注解，在@Pointcut中的参数设置对应注解的变量名称
      */
-    @Pointcut(value = "@annotation(com.meng.anno.Say)")
-    public void point() {
+    @Pointcut(value = "@annotation(say)",argNames = "say")
+    public void point(Say say) {
     }
 
     /**
@@ -57,17 +63,42 @@ public class Intercept {
      * 环绕通知类型,带有自定义注解方法,执行前、执行后,都会执行切入方法
      * 环绕通知类型,必须joinPoint.proceed()该方法,通知才能生效
      */
-    @Around("point()")
-    public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
+    /*@Around(value = "point(say)",argNames = "say")
+    public Object doAroundGetAnno(ProceedingJoinPoint joinPoint, Say say) throws Throwable {
         System.out.println("*******@Around");
-        Object[] args = joinPoint.getArgs();
+        *//*Object[] args = joinPoint.getArgs();
         for (Object o : args){
             Person person = (Person) o;
             ((Person) o).setName("b");
-        }
+        }*//*
+        System.out.println(say.returnClassName());
         Object vlue = joinPoint.proceed();
         Person person = (Person) vlue;
         person.setName("c");
         return vlue;
+    }*/
+
+    @Around(value = "point(say)",argNames = "joinPoint,say")
+    public Object doAroundGetParam(ProceedingJoinPoint joinPoint, Say say) throws Throwable {
+        //用于启动目标方法执行
+        joinPoint.proceed();
+        System.out.println("*******@doAroundGetParam");
+        say.paramClassName();
+        Object[] args = joinPoint.getArgs();
+        Object ob = new Object();
+        String paramClassNeme = say.paramClassName().getName();
+        for (Object o : args){
+            System.out.println(o.getClass());
+            ob = o;
+            if (o.getClass().getName().equals(paramClassNeme)){
+                //如果是该类型处理改参数不是则不处理
+                Person person = (Person) ob;
+                person.setName("b");
+                person.setAge(3);
+                ob = person;
+                System.out.println("处理******");
+            }
+        }
+     return ob;
     }
 }
