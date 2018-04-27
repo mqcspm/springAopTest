@@ -78,10 +78,8 @@ public class Intercept {
         return vlue;
     }*/
 
-    @Around(value = "point(say)",argNames = "joinPoint,say")
+    /*@Around(value = "point(say)",argNames = "joinPoint,say")
     public Object doAroundGetParam(ProceedingJoinPoint joinPoint, Say say) throws Throwable {
-        //用于启动目标方法执行
-        joinPoint.proceed();
         System.out.println("*******@doAroundGetParam");
         say.paramClassName();
         Object[] args = joinPoint.getArgs();
@@ -93,12 +91,31 @@ public class Intercept {
             if (o.getClass().getName().equals(paramClassNeme)){
                 //如果是该类型处理改参数不是则不处理
                 Person person = (Person) ob;
-                person.setName("b");
+                person.setName("param");
                 person.setAge(3);
                 ob = person;
-                System.out.println("处理******");
             }
         }
+        //用于启动目标方法执行，并拿到目标方法的返回值
+        joinPoint.proceed();
      return ob;
+    }*/
+
+
+    @Around(value = "point(say)",argNames = "joinPoint,say")
+    public Object doAroundGetReturn(ProceedingJoinPoint joinPoint, Say say) throws Throwable {
+        //用于启动目标方法执行，并拿到目标方法的返回值
+        Object ob = joinPoint.proceed();
+        System.out.println("*******@doAroundGetReturn");
+        say.paramClassName();
+        String returnClassNeme = say.returnClassName().getName();
+        //如果是该类型处理改参数不是则不处理
+        if (ob.getClass().getName().equals(returnClassNeme)){
+            Person person = (Person) ob;
+            person.setName("return");
+            person.setAge(3);
+            ob = person;
+        }
+        return ob;
     }
 }
